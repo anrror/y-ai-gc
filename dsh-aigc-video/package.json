@@ -1,0 +1,70 @@
+{
+  "name": "dsh-aigc-video",
+  "version": "0.1.0",
+  "description": "DSH plugin: AI video generation pipeline (script → character → storyboard → reference → video → edit) plus video mixing (混剪) and smart editing (智剪).",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist",
+    "cordis.patch.yml",
+    "prompts",
+    "README.md"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint src/",
+    "clean": "rm -rf dist .tsdown"
+  },
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "aigc",
+    "video",
+    "hailuo",
+    "cordis"
+  ],
+  "license": "MIT",
+  "author": "anrror <anrror@users.noreply.github.com>",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/anrror/y-ai-gc.git"
+  },
+  "bugs": {
+    "url": "https://github.com/anrror/y-ai-gc/issues"
+  },
+  "homepage": "https://github.com/anrror/y-ai-gc#readme",
+  "publishConfig": {
+    "access": "public",
+    "registry": "https://registry.npmjs.org/",
+    "tag": "latest"
+  },
+  "dependencies": {
+    "@deepseek-ai/cordis": "^4.0.0",
+    "@deepseek-ai/dsh-tools": "^0.0.1-rc.1",
+    "yaml": "^2.9.0"
+  },
+  "optionalDependencies": {
+    "@xenova/transformers": "^2.17.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "eslint": "^9.0.0",
+    "typescript": "^5.5.0",
+    "vitest": "^2.0.0"
+  },
+  "engines": {
+    "node": ">=22.15.0"
+  },
+  "dsh": {
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}

@@ -1,0 +1,28 @@
+# Cordis patch — registers dsh-aigc-video into the DSH composition.
+#
+# This file is applied as a layer over the base DSH profile. Users may
+# install via `dsh plugin add dsh-aigc-video` (production) or load
+# directly via `pnpm dsh web --patch ./dsh-aigc-video/cordis.patch.yml`
+# (development).
+#
+# The `name` field MUST match the `name` in package.json (`dsh-aigc-video`)
+# so DSH can resolve the published package entry point.
+
+- id: aigc-video-bundle
+  name: 'dsh-aigc-video'
+  # ESM-only entry; resolved by DSH's loader (Node.js ESM).
+  main: ./dist/index.js
+  # Plugins may carry config that overrides defaults — currently empty.
+  config:
+    # Reserved for Phase 2+ — provider keys, ffmpeg path, etc.
+    providers:
+      minimax:
+        apiKey: ${MINIMAX_API_KEY}
+        baseUrl: 'https://api.minimaxi.com'
+        model: 'MiniMax-Hailuo-2.3'
+    ffmpeg:
+      # Path to bundled ffmpeg binary; falls back to PATH lookup.
+      path: ''
+    whisper:
+      # Local model path; downloaded on first launch.
+      modelPath: ''

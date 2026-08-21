@@ -1,0 +1,103 @@
+server:
+  host: "127.0.0.1"
+  port: 8000
+
+proxy:
+  local_proxy: "http://127.0.0.1:7897"
+
+session:
+  data_dir: "code/data"
+
+pipeline:
+  video_provider: "minimax-h3"
+  planner_enabled: false  # P2 lightweight planner decision node (gray release)
+  planner_model: "isigning-llm"
+  preview_first_enabled: false  # P3 two-pass: cheap preview → approved refinement
+  tts_provider: "hailuo-tts"  # voice_generation stage (Phase 5.5) — MiniMax Speech 2.8
+
+# Quality Engineering (v3.2): thresholds + Python sidecar contract.
+# Set `sidecar_url` to enable DINO/ArcFace-grade metrics (production path).
+# Leave it blank to fall back to the local pHash implementation (zero-dep).
+quality:
+  sidecar_url: ""                # e.g. "http://127.0.0.1:9000" — empty = pHash fallback
+  sidecar_timeout_ms: 30000       # per-request budget
+  retry_budget: 2                 # max retries per shot before escalate-to-human
+  enable_subject_consistency: true
+  enable_prompt_alignment: false  # BLIP-BLEU sidecar not yet wired by default
+
+models:
+  isigning-llm:
+    api_key: "${ISIGNING_API_KEY}"
+    base_url: "https://prod-ai.isigning.cn/v1"
+    concurrency: 5
+    model_name: "Qwen3.6-27B-AEON-Ultimate-Uncensored-NVFP4"
+  isigning-vl:
+    api_key: "${ISIGNING_API_KEY}"
+    base_url: "https://prod-ai.isigning.cn/v1"
+    concurrency: 3
+    model_name: "qwen3-vl"
+  isigning-guard:
+    api_key: "${ISIGNING_API_KEY}"
+    base_url: "https://prod-ai.isigning.cn/v1"
+    concurrency: 3
+    model_name: "Qwen3Guard-Gen-8B"
+  deepseek-v4-flash:
+    api_key: "${DEEPSEEK_API_KEY}"
+    base_url: "https://api.deepseek.com/v1"
+    concurrency: 5
+  deepseek-v4-pro:
+    api_key: "${DEEPSEEK_API_KEY}"
+    base_url: "https://api.deepseek.com/v1"
+    concurrency: 3
+  qwen3.5-plus:
+    api_key: "${QWEN_API_KEY}"
+    base_url: "https://dashscope.aliyuncs.com/compatible-mode/v1"
+    concurrency: 5
+  glm-5-pro:
+    api_key: "${GLM_API_KEY}"
+    base_url: "https://open.bigmodel.cn/api/paas/v4"
+    concurrency: 3
+  kimi-k2.6:
+    api_key: "${KIMI_API_KEY}"
+    base_url: "https://api.moonshot.cn/v1"
+    concurrency: 5
+  minimax-h3:
+    api_key: "${MINIMAX_API_KEY}"
+    base_url: "https://api.minimaxi.com"  # 中国站；国际站 https://api.minimax.io（key 不互通）
+    concurrency: 2  # free-tier CONN limit; paid tier up to 15
+    model_name: "MiniMax-H3"
+  hailuo-tts:
+    # MiniMax Speech 2.8 — TTS / 配音 (Phase 5.5 voice_generation stage)
+    # Models: speech-2.8-hd | speech-2.8-turbo | speech-2.6-hd | speech-2.6-turbo
+    #         speech-02-hd | speech-02-turbo | speech-01-hd | speech-01-turbo
+    # Endpoints: POST /v1/t2a_v2 (TTS), POST /v1/voice_clone (音色复刻)
+    api_key: "${MINIMAX_API_KEY}"
+    base_url: "https://api.minimaxi.com"
+    concurrency: 4
+    model_name: "speech-2.8-hd"
+  hailuo-2.3:
+    api_key: "${MINIMAX_API_KEY}"
+    base_url: "https://api.minimaxi.com"  # 中国站；Hailuo v1 API
+    concurrency: 3
+    model_name: "MiniMax-Hailuo-2.3"
+  selfhost-h3:
+    api_key: ""
+    base_url: "http://127.0.0.1:30010"
+    mode: "sglang"  # sglang | vllm
+    concurrency: 1
+    model_name: "MiniMax-H3"
+  wan2.6-video:
+    api_key: "${DASHSCOPE_API_KEY}"
+    base_url: "https://dashscope.aliyuncs.com/api/v1"
+    concurrency: 3
+  kling-v3:
+    api_key: "${KLING_API_KEY}"
+    base_url: "https://api.klingai.com"
+    concurrency: 3
+  wan:
+    # DashScope 通义图像生成 (wanx-v1). 异步任务模式：先 submit task_id，
+    # 再轮询 /api/v1/tasks/{task_id}。 详情见 src/providers/image/index.ts
+    api_key: "${DASHSCOPE_API_KEY}"
+    base_url: "https://dashscope.aliyuncs.com/api/v1"
+    concurrency: 2
+    model_name: "wanx-v1"

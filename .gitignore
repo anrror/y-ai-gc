@@ -1,0 +1,40 @@
+# === 项目特定排除 ===
+AGENTS.md
+
+# === Python ===
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+
+# === Node.js ===
+node_modules/
+.next/
+npm-debug.log*
+
+# === 构建产物 / 运行时数据 ===
+**/backend/code/
+
+# === 环境变量 ===
+.env
+.env.*
+!.env.example
+
+# === IDE / 编辑器 ===
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# === AI 辅助配置 ===
+.omo/
+.ai/
+.playwright-mcp/
+
+# === 系统文件 ===
+Thumbs.db
+.DS_Store
+
+# === 包锁文件（不提交 lockfiles） ===
+package-lock.json

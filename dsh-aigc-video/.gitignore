@@ -1,0 +1,12 @@
+node_modules/
+dist/
+*.log
+.DS_Store
+.env
+.env.local
+coverage/
+.vitest-cache/
+# Local session data created by pipeline tests / smoke runs.
+code/
+# Build cache (downloaded artifacts)
+.cache/
